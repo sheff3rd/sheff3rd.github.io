@@ -1,41 +1,39 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 var THREE = require('three');
 
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var renderer = require('./src/renderer');
+var scene    = require('./src/scene');
+var camera   = require('./src/camera');
 
-var canvas = document.createElement( 'canvas' );
-var context = canvas.getContext( 'webgl2', { alpha: false } );
-var renderer = new THREE.WebGLRenderer( { canvas: canvas, context: context } );
+/* append renderer into DOM */
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild( renderer.domElement );
+document.body.appendChild(renderer.domElement);
 
-var geometry = new THREE.BoxGeometry();
-var material = new THREE.MeshBasicMaterial( { color: 0xfca503, linewidth: 4 } );
-var cube = new THREE.Mesh( geometry, material );
+/* setup camera */
+camera.position.set( 0, 0, 100 );
+camera.lookAt( 0, 0, 0 );
 
-var geo = new THREE.EdgesGeometry( geometry );
-var mat = new THREE.LineBasicMaterial( { color: 0x000000, linewidth: 100 } );
-var wireframe = new THREE.LineSegments( geo, mat );
-wireframe.renderOrder = 1;
+var material = new THREE.LineBasicMaterial( { color: 0xff00ff } );
 
-scene.add( cube );
-scene.add( wireframe );
+var points = [];
+points.push( new THREE.Vector3( - 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, 10, 0 ) );
+points.push( new THREE.Vector3( 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, -10, 0 ) );
+points.push( new THREE.Vector3( 20, -10, 0 ) );
 
-camera.position.z = 5;
+var geometry = new THREE.BufferGeometry().setFromPoints( points );
+var line     = new THREE.Line( geometry, material );
+
+scene.add( line );
 
 function animate() {
   requestAnimationFrame( animate );
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-
-  wireframe.rotation.x += 0.01;
-  wireframe.rotation.y += 0.01;
   renderer.render( scene, camera );
 }
 animate();
 
-},{"three":2}],2:[function(require,module,exports){
+},{"./src/camera":3,"./src/renderer":4,"./src/scene":5,"three":2}],2:[function(require,module,exports){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -51303,4 +51301,27 @@ animate();
 
 })));
 
-},{}]},{},[1]);
+},{}],3:[function(require,module,exports){
+var THREE = require('three');
+
+var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+
+module.exports = camera;
+
+},{"three":2}],4:[function(require,module,exports){
+var THREE = require('three');
+
+var canvas = document.createElement( 'canvas' );
+var context = canvas.getContext( 'webgl2', { alpha: false } );
+var renderer = new THREE.WebGLRenderer( { canvas: canvas, context: context } );
+
+module.exports = renderer;
+
+},{"three":2}],5:[function(require,module,exports){
+var THREE = require('three');
+
+var scene = new THREE.Scene();
+
+module.exports = scene;
+
+},{"three":2}]},{},[1]);

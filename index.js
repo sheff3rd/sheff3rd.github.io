@@ -1,35 +1,33 @@
 var THREE = require('three');
 
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var renderer = require('./src/renderer');
+var scene    = require('./src/scene');
+var camera   = require('./src/camera');
 
-var canvas = document.createElement( 'canvas' );
-var context = canvas.getContext( 'webgl2', { alpha: false } );
-var renderer = new THREE.WebGLRenderer( { canvas: canvas, context: context } );
+/* append renderer into DOM */
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild( renderer.domElement );
+document.body.appendChild(renderer.domElement);
 
-var geometry = new THREE.BoxGeometry();
-var material = new THREE.MeshBasicMaterial( { color: 0xfca503, linewidth: 4 } );
-var cube = new THREE.Mesh( geometry, material );
+/* setup camera */
+camera.position.set( 0, 0, 100 );
+camera.lookAt( 0, 0, 0 );
 
-var geo = new THREE.EdgesGeometry( geometry );
-var mat = new THREE.LineBasicMaterial( { color: 0x000000, linewidth: 100 } );
-var wireframe = new THREE.LineSegments( geo, mat );
-wireframe.renderOrder = 1;
+var material = new THREE.LineBasicMaterial( { color: 0xff00ff } );
 
-scene.add( cube );
-scene.add( wireframe );
+var points = [];
+points.push( new THREE.Vector3( - 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, 10, 0 ) );
+points.push( new THREE.Vector3( 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, -10, 0 ) );
+points.push( new THREE.Vector3( 20, -10, 0 ) );
 
-camera.position.z = 5;
+var geometry = new THREE.BufferGeometry().setFromPoints( points );
+var line     = new THREE.Line( geometry, material );
+
+scene.add( line );
 
 function animate() {
   requestAnimationFrame( animate );
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-
-  wireframe.rotation.x += 0.01;
-  wireframe.rotation.y += 0.01;
   renderer.render( scene, camera );
 }
 animate();
