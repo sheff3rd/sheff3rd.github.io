@@ -4,7 +4,8 @@
   "description": "webgl blog page",
   "main": "index.js",
   "scripts": {
-    "start": "mkdir -p dist; watchify index.js -o dist/bundle.js",
+    "open": "open index.html",
+    "start": "mkdir -p dist; npm run open; watchify index.js -o dist/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
