@@ -18,7 +18,15 @@ gulp.task('watch', function() {
 
   var bundle = function() {
     return bundler
-      .transform(babelify, { global: true, presets: ["@babel/preset-env"], plugins: ['@babel/plugin-transform-modules-commonjs'] })
+      .require(require.resolve('./node_modules/three/build/three.module.js'), { expose: 'three' })
+      .transform(
+          babelify,
+          {
+            global: true,
+            presets: ["@babel/preset-env"],
+            plugins: ['@babel/plugin-transform-modules-commonjs']
+          }
+        )
       .bundle()
       .on('error', function (error) { console.error(error) })
       .pipe(source(destFile))
