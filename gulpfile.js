@@ -18,6 +18,7 @@ gulp.task('watch', function() {
 
   var bundle = function() {
     return bundler
+      .require(require.resolve('./node_modules/three/build/three.module.js'), { expose: 'three' })
       .transform(
           babelify,
           {
