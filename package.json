@@ -18,13 +18,18 @@
   },
   "homepage": "https://github.com/sheff3rd/alexandreovcharov#readme",
   "dependencies": {
-    "three": "^0.117.1",
-    "three-gltf-loader": "^1.111.0"
+    "three": "^0.117.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.10.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/preset-env": "^7.10.3",
+    "babelify": "^10.0.0",
     "browserify": "latest",
     "eslint": "^7.3.1",
-    "watchify": "latest",
-    "vinyl-source-stream": "latest"
+    "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0",
+    "vinyl-source-stream": "latest",
+    "watchify": "latest"
   }
 }

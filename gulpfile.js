@@ -3,6 +3,7 @@ var browserify = require('browserify'),
     watchify = require('watchify'),
     source = require('vinyl-source-stream'),
     connect = require('gulp-connect'),
+    babelify = require('babelify'),
     sourceFile = './index.js',
     destFolder = './dist/',
     destFile = 'bundle.js';
@@ -17,8 +18,9 @@ gulp.task('watch', function() {
 
   var bundle = function() {
     return bundler
+      .transform(babelify, { global: true, presets: ["@babel/preset-env"], plugins: ['@babel/plugin-transform-modules-commonjs'] })
       .bundle()
-      .on('error', function () {})
+      .on('error', function (error) { console.error(error) })
       .pipe(source(destFile))
       .pipe(gulp.dest(destFolder));
   };
