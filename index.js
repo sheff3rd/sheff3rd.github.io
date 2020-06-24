@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+var THREE = require('three');
 
 var renderer = require('./src/renderer');
 var scene    = require('./src/scene');

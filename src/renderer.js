@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+var THREE = require('three');
 
 var canvas = document.createElement( 'canvas' );
 var context = canvas.getContext( 'webgl2', { alpha: false } );
