@@ -1,4 +1,4 @@
-var THREE = require('three');
+import * as THREE from 'three';
 
 const color = 0xFFFFFF;
 const intensity = 1;
