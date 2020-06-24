@@ -3,28 +3,39 @@ var THREE = require('three');
 var renderer = require('./src/renderer');
 var scene    = require('./src/scene');
 var camera   = require('./src/camera');
+var loader   = require('./src/loader');
 
 /* append renderer into DOM */
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 /* setup camera */
-camera.position.set( 0, 0, 100 );
-camera.lookAt( 0, 0, 0 );
+camera.position.set( 0, 100, 250 );
 
-var material = new THREE.LineBasicMaterial( { color: 0xff00ff } );
+/* load resource */
+loader.load(
+  'models/matilda/scene.gltf',
+  function ( gltf ) {
+    scene.add( gltf.scene );
 
-var points = [];
-points.push( new THREE.Vector3( - 10, 0, 0 ) );
-points.push( new THREE.Vector3( 0, 10, 0 ) );
-points.push( new THREE.Vector3( 10, 0, 0 ) );
-points.push( new THREE.Vector3( 0, -10, 0 ) );
-points.push( new THREE.Vector3( 20, -10, 0 ) );
+    gltf.animations;
+    gltf.scene;
+    gltf.scenes;
+    gltf.cameras;
+    gltf.asset;
+  },
+  function ( xhr ) {
 
-var geometry = new THREE.BufferGeometry().setFromPoints( points );
-var line     = new THREE.Line( geometry, material );
+    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 
-scene.add( line );
+  },
+  function ( error ) {
+
+    console.log( 'An error happened' );
+
+  }
+)
+
 
 function animate() {
   requestAnimationFrame( animate );
