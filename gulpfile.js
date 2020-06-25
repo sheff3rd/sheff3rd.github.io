@@ -21,6 +21,7 @@ gulp.task('watch', function() {
       .transform(babelify, { global: true, presets: ["@babel/preset-env"], plugins: ['@babel/plugin-transform-modules-commonjs'] })
       .bundle()
       .on('error', function (error) { console.error(error) })
+      .on('end', function() { console.log('[REBUNDLE] Finished') })
       .pipe(source(destFile))
       .pipe(gulp.dest(destFolder));
   };
