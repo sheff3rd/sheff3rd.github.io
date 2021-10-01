@@ -148,10 +148,11 @@ function scroll(event) {
 
   uniforms['zoom']['value'] = zoom;
   uniforms['offset']['value'] = offset;
+  animate();
 }
 
 function animate() {
-  requestAnimationFrame( animate );
+  // requestAnimationFrame( animate );
   renderer.render( scene, camera );
 }
 
