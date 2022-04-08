@@ -1,35 +1,24 @@
 var THREE = require('three');
 
-var renderer = require('./src/renderer');
-var scene    = require('./src/scene');
-var camera   = require('./src/camera');
-var light    = require('./src/light');
+/* NOTE: imports block */
+var renderer  = require('./src/renderer');
+var scene     = require('./src/scene');
+var camera    = require('./src/camera');
+var light     = require('./src/light');
+var raycaster = require('./src/raycaster')
+var pointer   = require('./src/pointer');
 
+/* NOTE: import loaders */
 var GLTFLoader    = require('./src/loaders/gltf');
 var textureLoader = require('./src/loaders/texture')
 
-/* append renderer into DOM */
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-
-/* place background */
-var spaceTexture = textureLoader.load( 'assets/textures/romantic.jpg' );
-scene.background = spaceTexture;
-
-/* setup camera */
-camera.position.set( 0, 200, 250 );
-
-/* setup light */
-light.position.set(-1, 102, 254);
-scene.add( light );
-
-/* load resources */
+/* NOTE: load model */
 var model;
 GLTFLoader.load(
-  'assets/models/heart/scene.gltf',
+  './assets/models/heart/scene.gltf',
   function ( gltf ) {
     model = gltf.scene;
-    gltf.scene.scale.set(20,20,20) // scale here
+    gltf.scene.scale.set( 20, 20, 20)    /* NOTE: scene scale */
     scene.add( model );
 
     gltf.animations;
@@ -50,25 +39,85 @@ GLTFLoader.load(
   }
 );
 
-// var brickTexture = textureLoader.load( 'assets/textures/floor.jpg' );
-// brickTexture.wrapS = THREE.RepeatWrapping;
-// brickTexture.wrapT = THREE.RepeatWrapping;
-// brickTexture.repeat.set( 5, 5 );
+let INTERSECTED;
 
 
-// /* place floor */
-// var floorGeometry = require('./src/geometry/floor');
-// var material = new THREE.MeshMatcapMaterial({ map: brickTexture });
-// const floor = new THREE.Mesh( floorGeometry, material );
-// scene.add( floor );
+init();
+animate();
 
 
+
+
+
+
+
+
+
+
+
+
+
+/* NOTE: FUNCTIONS */
+
+function init() {
+  var backgroundTexture = textureLoader.load( 'assets/textures/romantic.jpg' );
+
+  camera.position.set( 0, 200, 250 );
+  light.position.set( -1, 102, 254 );
+
+  scene.background = backgroundTexture;
+  scene.add( light );
+
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  document.body.appendChild( renderer.domElement );
+  document.addEventListener( 'mousemove', onPointerMove );
+}
+
+/* NOTE: animate model rotation */
 let direction = 1;
 function animate() {
   requestAnimationFrame( animate );
 
+
+  render();
+}
+
+/* NOTE: cast rays on pointer move */
+function onPointerMove( event ) {
+  pointer.x =   ( event.clientX / window.innerWidth )  * 2 - 1;
+  pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
+function render() {
   if ( model ) model.rotation.y += 0.01 * direction;
+
+
+  raycaster.setFromCamera( pointer, camera );
+
+  const intersects = raycaster.intersectObjects( scene.children, true );
+
+  if ( intersects.length > 0 ) {
+    console.log("intersects something");
+
+    if ( INTERSECTED != intersects[ 0 ].object ) {
+
+      if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+        INTERSECTED = intersects[ 0 ].object;
+        INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+        INTERSECTED.material.emissive.setHex( 0xff0000 );
+
+      }
+
+    } else {
+
+      if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+      INTERSECTED = null;
+
+    }
 
   renderer.render( scene, camera );
 }
-animate();
+
+
